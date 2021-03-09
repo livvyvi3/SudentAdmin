@@ -107,7 +107,7 @@ namespace SudentAdmin
                 conn.Open();
 
 
-                Console.WriteLine("Enter the student ID of the student you would like to update: ");
+                Console.WriteLine("Enter the student ID of the student you would like to delete: ");
                 int studentId = Convert.ToInt16(Console.ReadLine());
 
                 Console.WriteLine("Enter the new data" );
@@ -155,8 +155,10 @@ namespace SudentAdmin
                         }
 
 
-                }              
-                // condition in case there is no such id in the database
+                }
+
+                
+
             
 
                 conn.Close();
@@ -174,7 +176,68 @@ namespace SudentAdmin
                 return false;
             }
         }
-        public static bool getAllStudents(SqlConnection conn)
+
+        public static bool getStudent(SqlConnection conn)
+        {
+            
+            List<STUDENT> myStudents = new List<STUDENT>();
+
+
+            try
+            {
+
+                conn.Open();
+                Console.WriteLine("Enter the student ID of the student you would like to search: ");
+                int student_Id = Convert.ToInt16(Console.ReadLine());
+
+                SqlCommand command = new SqlCommand($"SELECT * FROM Student where student_id = {student_Id}"  , conn);
+                               
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+
+                        //populate myStudent object with every student found.
+                        myStudents.Add(new STUDENT
+                        {
+                            student_id = Convert.ToInt32(reader["student_id"].ToString()),
+                            student_name = reader["student_name"].ToString(),
+                            specialization = reader["specialization"].ToString(),
+                            qualification = reader["qualification"].ToString(),
+                            courses = Convert.ToInt32(reader["courses"].ToString())
+                        });
+
+
+
+
+                    }
+                }
+
+                conn.Close();
+
+                if (myStudents.Count > 0)
+                {
+                    Console.WriteLine($"{myStudents.Count} student found in the database");
+                    PrintStudents(myStudents);
+                }
+                else
+                {
+                    Console.WriteLine($"No student found in the database");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                conn.Close();
+                return false; ;
+            }
+        }
+       public static bool getAllStudents(SqlConnection conn)
         {
             List<STUDENT> myStudents = new List<STUDENT>();
 
@@ -232,7 +295,8 @@ namespace SudentAdmin
 
 
         }
-        // 
+     
+
         private static void PrintStudents(List<STUDENT> myStudents)
         {
             foreach (STUDENT student in myStudents)

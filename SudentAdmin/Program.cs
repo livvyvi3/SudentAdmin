@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using SudentAdmin;
+using System.Threading;
 
 namespace StudentAdmin
 {
@@ -19,69 +20,110 @@ namespace StudentAdmin
             //SqlCommand command = new SqlCommand();
             bool result = false;
 
+
+
+            //string option = Console.ReadLine();
+
+
+            int userInput = displayMenu();
+
             try
             {
 
-                Console.WriteLine("Please select option");
-                Console.WriteLine("1: Insert student");
-                Console.WriteLine("2: Delete student");
-                Console.WriteLine("3: Update details");
-                Console.WriteLine("4: Select all students");
-                //Console.WriteLine("5: Select Specific student");
-
-                string option = Console.ReadLine();
-
-                switch (option)
+                while (userInput != 6)
                 {
-                    case "1":
-                        {
-                            result = StudentHelper.InsertStudent(conn);
 
-                            break;
-                        }
-                    case "2":
-                        {
-                            result = StudentHelper.deleteStudent(conn);
-                            break;
-                        }
-                    case "3":
-                        {
-                            result = StudentHelper.updateStudent(conn);
-                            break;
-                        }
 
-                    case "4":
-                        {
-                            result = StudentHelper.getAllStudents(conn);
-                            break;
-                        }
 
-                    default:
-                        {
-                            Console.WriteLine("Invalid option");
-                            break;
-                        }
+                    switch (userInput)
+                    {
+                        case 1:
+                            {
+                                result = StudentHelper.InsertStudent(conn);
+
+                                break;
+                            }
+                        case 2:
+                            {
+                                result = StudentHelper.deleteStudent(conn);
+                                break;
+                            }
+                        case 3:
+                            {
+                                result = StudentHelper.updateStudent(conn);
+                                break;
+                            }
+
+                        case 4:
+                            {
+                                result = StudentHelper.getAllStudents(conn);
+                                break;
+                            }
+                        case 5:
+                            {
+                                result = StudentHelper.getStudent(conn);
+                                break;
+                            }
+                        case 6:
+                            {
+                                Console.WriteLine("The application will close shortly");
+                                break;
+                            }
+
+                        default:
+                            {
+                                Console.WriteLine("Invalid option");
+                                break;
+                            }
+                    }
+
+
+                    if (result)
+                    {
+                        Console.WriteLine("Selected option Worked");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Selected option failed.");
+                    }
+
+                    Console.WriteLine("\n");
+
+                    userInput = displayMenu();
                 }
 
-
-                if (result)
-                    Console.WriteLine("Selected option Worked");
-                else
-
-                    Console.WriteLine("Selected option failed.");
-
-
-
+                Console.WriteLine("Closing Application......");
+                Thread.Sleep(2000);
+                
+               
             }
             catch (SqlException ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-            Console.Read();
+
+           
 
 
-            Console.WriteLine("Data base Connection Closed.");
 
         }
+
+        static public int displayMenu()
+        {
+            Console.WriteLine("Please select option");
+            Console.WriteLine("1: Insert student");
+            Console.WriteLine("2: Delete student");
+            Console.WriteLine("3: Update details");
+            Console.WriteLine("4: Select all students");
+            Console.WriteLine("5: Select Specific student");
+            Console.WriteLine("6: Exit");
+            var result = Console.ReadLine();
+            return Convert.ToInt32(result);
+        }
     }
+
+
+
 }
+
+
