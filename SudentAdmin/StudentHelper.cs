@@ -35,7 +35,11 @@ namespace SudentAdmin
                 // query to insert data into the table
 
                 SqlCommand command = new SqlCommand($"INSERT INTO STUDENT VALUES ( '{mystudent.student_name}', '{mystudent.specialization}', '{mystudent.qualification}',{mystudent.courses})", conn);
-                //command.CommandText = ;
+                command.Parameters.Add(new SqlParameter(@"student_name", mystudent.student_name));
+                command.Parameters.Add(new SqlParameter(@"specialization", mystudent.specialization));
+                command.Parameters.Add(new SqlParameter(@"qualification", mystudent.qualification));
+                command.Parameters.Add(new SqlParameter(@"courses", mystudent.courses));
+                // command.Parameters.//command.CommandText = ;
 
 
 
@@ -156,10 +160,8 @@ namespace SudentAdmin
 
 
                 }
-
                 
 
-            
 
                 conn.Close();
 
